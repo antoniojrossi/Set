@@ -9,11 +9,7 @@
 import Foundation
 
 struct Card: CustomStringConvertible {
-    var description: String {
-        return "\(numberOfShapes) \(shading) \(color) \(shape)"
-    }
-    
-    
+
     enum NumberOfShapes {
         case one
         case two
@@ -42,4 +38,8 @@ struct Card: CustomStringConvertible {
     let shape: Shape
     let shading: Shading
     let color: Color
+    
+    var description: String {
+        return "\(numberOfShapes) \(shading) \(color) \(shape)"
+    }
 }
