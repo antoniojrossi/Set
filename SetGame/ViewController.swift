@@ -9,12 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    private(set) var setGame = SetGame()
+    
+    @IBOutlet private var faceUpCards: [UIButton]!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    @IBAction private func newGame(_ sender: UIButton) {
     }
-
-
+    
+    @IBAction private func dealCards(_ sender: UIButton) {
+    }
+    
+    @IBAction private func selectCard(_ sender: UIButton) {
+        print("Card selected!")
+    }
 }
-
