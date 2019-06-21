@@ -10,8 +10,8 @@ import Foundation
 
 struct Card: CustomStringConvertible {
 
-    enum NumberOfShapes {
-        case one
+    enum NumberOfShapes: Int {
+        case one = 1
         case two
         case three
     }
