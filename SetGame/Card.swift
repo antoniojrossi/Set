@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Card: CustomStringConvertible {
+struct Card: CustomStringConvertible, Equatable, Hashable {
 
     enum NumberOfShapes: Int {
         case one = 1

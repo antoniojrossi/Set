@@ -165,18 +165,18 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outletCollection property="faceUpCards" destination="cVH-tA-xjD" collectionClass="NSMutableArray" id="qlR-tN-Ngf"/>
-                        <outletCollection property="faceUpCards" destination="y2L-ai-uCw" collectionClass="NSMutableArray" id="CWR-oP-vO5"/>
-                        <outletCollection property="faceUpCards" destination="6ql-gh-Wae" collectionClass="NSMutableArray" id="xQe-y0-bNv"/>
-                        <outletCollection property="faceUpCards" destination="fvN-JG-Vgl" collectionClass="NSMutableArray" id="X6B-1a-v2D"/>
-                        <outletCollection property="faceUpCards" destination="kfZ-vU-JeG" collectionClass="NSMutableArray" id="x0Q-wJ-eE9"/>
-                        <outletCollection property="faceUpCards" destination="mxe-Oc-rNx" collectionClass="NSMutableArray" id="936-da-2Lq"/>
-                        <outletCollection property="faceUpCards" destination="qtw-DM-x1Y" collectionClass="NSMutableArray" id="f7g-2p-asH"/>
-                        <outletCollection property="faceUpCards" destination="z1a-Cs-9Mn" collectionClass="NSMutableArray" id="ArS-mq-eMV"/>
-                        <outletCollection property="faceUpCards" destination="VNl-YT-w1d" collectionClass="NSMutableArray" id="Q3v-Ic-RBH"/>
-                        <outletCollection property="faceUpCards" destination="r8L-wc-Qq0" collectionClass="NSMutableArray" id="Gsc-Mo-ICm"/>
-                        <outletCollection property="faceUpCards" destination="IU1-cT-HPn" collectionClass="NSMutableArray" id="Rd4-Jf-xbd"/>
-                        <outletCollection property="faceUpCards" destination="zHS-Th-XQz" collectionClass="NSMutableArray" id="gcW-fa-yUp"/>
+                        <outletCollection property="faceUpCardButtons" destination="cVH-tA-xjD" collectionClass="NSMutableArray" id="qlR-tN-Ngf"/>
+                        <outletCollection property="faceUpCardButtons" destination="y2L-ai-uCw" collectionClass="NSMutableArray" id="CWR-oP-vO5"/>
+                        <outletCollection property="faceUpCardButtons" destination="6ql-gh-Wae" collectionClass="NSMutableArray" id="xQe-y0-bNv"/>
+                        <outletCollection property="faceUpCardButtons" destination="fvN-JG-Vgl" collectionClass="NSMutableArray" id="X6B-1a-v2D"/>
+                        <outletCollection property="faceUpCardButtons" destination="kfZ-vU-JeG" collectionClass="NSMutableArray" id="x0Q-wJ-eE9"/>
+                        <outletCollection property="faceUpCardButtons" destination="mxe-Oc-rNx" collectionClass="NSMutableArray" id="936-da-2Lq"/>
+                        <outletCollection property="faceUpCardButtons" destination="qtw-DM-x1Y" collectionClass="NSMutableArray" id="f7g-2p-asH"/>
+                        <outletCollection property="faceUpCardButtons" destination="z1a-Cs-9Mn" collectionClass="NSMutableArray" id="ArS-mq-eMV"/>
+                        <outletCollection property="faceUpCardButtons" destination="VNl-YT-w1d" collectionClass="NSMutableArray" id="Q3v-Ic-RBH"/>
+                        <outletCollection property="faceUpCardButtons" destination="r8L-wc-Qq0" collectionClass="NSMutableArray" id="Gsc-Mo-ICm"/>
+                        <outletCollection property="faceUpCardButtons" destination="IU1-cT-HPn" collectionClass="NSMutableArray" id="Rd4-Jf-xbd"/>
+                        <outletCollection property="faceUpCardButtons" destination="zHS-Th-XQz" collectionClass="NSMutableArray" id="gcW-fa-yUp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

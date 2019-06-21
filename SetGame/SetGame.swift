@@ -10,12 +10,15 @@ import Foundation
 
 struct SetGame {
     private let initialNumberOfFaceUpCards = 12
+    private let maxNumberOfSelectedCards = 3
     private var deck: [Card]
     private(set) var faceUpCards: [Card]
+    private(set) var selectedCards: Set<Card>
     
     init() {
         deck = Array<Card>()
         faceUpCards = Array<Card>()
+        selectedCards = Set<Card>()
         let numberOfShapes: [Card.NumberOfShapes] = [.one, .two, .three]
         let shapes: [Card.Shape] = [.diamond, .squiggle, .stadium]
         let shadings: [Card.Shading] = [.solid, .striped, .open]
@@ -33,5 +36,19 @@ struct SetGame {
         deck.shuffle()
         faceUpCards = Array(deck[0..<initialNumberOfFaceUpCards])
         deck.removeLast(initialNumberOfFaceUpCards)
+    }
+    
+    func isCardSelected(_ card: Card) -> Bool {
+        return selectedCards.contains(card)
+    }
+    
+    mutating func selectCard(byIndex index: Int) {
+        guard faceUpCards.indices.contains(index) else {
+            return
+        }
+        if selectedCards.count >= maxNumberOfSelectedCards {
+            selectedCards.removeAll()
+        }
+        selectedCards.insert(faceUpCards[index])
     }
 }

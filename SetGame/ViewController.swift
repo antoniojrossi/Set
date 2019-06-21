@@ -24,13 +24,16 @@ class ViewController: UIViewController {
     
     private(set) var game = SetGame()
     
-    @IBOutlet private var faceUpCards: [UIButton]!
+    @IBOutlet private var faceUpCardButtons: [UIButton]!
     @IBAction private func newGame(_ sender: UIButton) {
     }
     @IBAction private func dealCards(_ sender: UIButton) {
     }
     @IBAction private func selectCard(_ sender: UIButton) {
-        print("Card selected!")
+        if let selectedCardButtonIndex = faceUpCardButtons.firstIndex(of: sender) {
+            game.selectCard(byIndex: selectedCardButtonIndex)
+            updateViewFromModel()
+        }
     }
     
     override func viewDidLoad() {
@@ -38,10 +41,18 @@ class ViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
-        for index in faceUpCards.indices {
-            let cardButton = faceUpCards[index]
+        for index in faceUpCardButtons.indices {
+            let cardButton = faceUpCardButtons[index]
             let faceUpCard = game.faceUpCards[index]
             updateCardUI(cardButton, with: faceUpCard)
+        }
+    }
+    
+    private func updateSelectedCardsViewFromModel() {
+        for index in game.faceUpCards.indices {
+            if game.selectedCards.contains(game.faceUpCards[index]) {
+                
+            }
         }
     }
     
@@ -55,6 +66,12 @@ class ViewController: UIViewController {
         ]
         let attributedText = NSAttributedString(string: String(repeating: symbolForShape(card.shape), count: numberOfShapes) , attributes: attributes)
         cardButton.setAttributedTitle(attributedText, for: UIControl.State.normal)
+        if game.isCardSelected(card) {
+            cardButton.layer.borderWidth = 3.0
+            cardButton.layer.borderColor = UIColor.blue.cgColor
+        } else {
+            cardButton.layer.borderWidth = 0.0
+        }
     }
     
     private func uiColorFor(_ color: Card.Color) -> UIColor {
