@@ -26,12 +26,19 @@ class ViewController: UIViewController {
     private let selectedCardButtonBorderColor = UIColor.blue.cgColor
     private let noBorderWidth = CGFloat(0.0)
     
-    private(set) var game = SetGame()
+    private(set) var game = SetGame(
+        initialNumberOfFaceUpCards: 12,
+        maxNumberOfFaceUpCards: 24,
+        cardsPerDeal: 3
+    )
     
     @IBOutlet private var faceUpCardButtons: [UIButton]!
+    @IBOutlet weak var dealCardsButton: UIButton!
     @IBAction private func newGame(_ sender: UIButton) {
     }
     @IBAction private func dealCards(_ sender: UIButton) {
+        game.dealCards()
+        updateViewFromModel()
     }
     @IBAction private func selectCard(_ sender: UIButton) {
         if let selectedCardButtonIndex = faceUpCardButtons.firstIndex(of: sender) {
@@ -45,6 +52,7 @@ class ViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
+        dealCardsButton.isEnabled = game.canDealMoreCards
         for index in faceUpCardButtons.indices {
             let cardButton = faceUpCardButtons[index]
             if game.faceUpCards.indices.contains(index) {

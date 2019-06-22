@@ -9,13 +9,25 @@
 import Foundation
 
 struct SetGame {
-    private let initialNumberOfFaceUpCards = 12
     private let maxNumberOfSelectedCards = 3
+    private let initialNumberOfFaceUpCards: Int
+    private let maxNumberOfFaceUpCards: Int
+    private let cardsPerDeal: Int
     private var deck: [Card]
     private(set) var faceUpCards: [Card]
     private(set) var selectedCards: Set<Card>
+    var canDealMoreCards: Bool {
+        get {
+            print("faceUpCards.count: \(faceUpCards.count), maxNumberOfFaceUpCards: \(maxNumberOfFaceUpCards) ")
+            print("faceUpCards.count >= maxNumberOfFaceUpCards: \(faceUpCards.count >= maxNumberOfFaceUpCards)")
+            return !(deck.isEmpty || faceUpCards.count >= maxNumberOfFaceUpCards)
+        }
+    }
     
-    init() {
+    init(initialNumberOfFaceUpCards: Int, maxNumberOfFaceUpCards: Int, cardsPerDeal: Int) {
+        self.initialNumberOfFaceUpCards = initialNumberOfFaceUpCards
+        self.maxNumberOfFaceUpCards = maxNumberOfFaceUpCards
+        self.cardsPerDeal = cardsPerDeal
         deck = Array<Card>()
         faceUpCards = Array<Card>()
         selectedCards = Set<Card>()
@@ -35,7 +47,7 @@ struct SetGame {
         }
         deck.shuffle()
         faceUpCards = Array(deck[0..<initialNumberOfFaceUpCards])
-        deck.removeLast(initialNumberOfFaceUpCards)
+        deck.removeFirst(initialNumberOfFaceUpCards)
     }
     
     func isCardSelected(_ card: Card) -> Bool {
@@ -51,5 +63,14 @@ struct SetGame {
             selectedCards.removeAll()
         }
         selectedCards.insert(selectedCard)
+    }
+    
+    mutating func dealCards() {
+        for _ in (0..<cardsPerDeal) {
+            if faceUpCards.count < maxNumberOfFaceUpCards, let dealedCard = deck.first {
+                faceUpCards.append(dealedCard)
+                deck.removeFirst()
+            }
+        }
     }
 }
