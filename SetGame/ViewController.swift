@@ -35,6 +35,12 @@ class ViewController: UIViewController {
     @IBOutlet private var faceUpCardButtons: [UIButton]!
     @IBOutlet weak var dealCardsButton: UIButton!
     @IBAction private func newGame(_ sender: UIButton) {
+        game = SetGame(
+            initialNumberOfFaceUpCards: 12,
+            maxNumberOfFaceUpCards: 24,
+            cardsPerDeal: 3
+        )
+        updateViewFromModel()
     }
     @IBAction private func dealCards(_ sender: UIButton) {
         game.dealCards()
@@ -76,6 +82,7 @@ class ViewController: UIViewController {
             cardButton.setTitle(String(), for: UIControl.State.normal)
             cardButton.setAttributedTitle(NSAttributedString(), for: UIControl.State.normal)
             cardButton.backgroundColor = invisibleCardButtonColor
+            cardButton.layer.borderWidth = noBorderWidth
             return
         }
         cardButton.backgroundColor = cardButtonBackgroundColor
