@@ -18,8 +18,6 @@ struct SetGame {
     private(set) var selectedCards: Set<Card>
     var canDealMoreCards: Bool {
         get {
-            print("faceUpCards.count: \(faceUpCards.count), maxNumberOfFaceUpCards: \(maxNumberOfFaceUpCards) ")
-            print("faceUpCards.count >= maxNumberOfFaceUpCards: \(faceUpCards.count >= maxNumberOfFaceUpCards)")
             return !(deck.isEmpty || faceUpCards.count >= maxNumberOfFaceUpCards)
         }
     }
