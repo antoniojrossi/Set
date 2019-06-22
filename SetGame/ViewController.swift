@@ -21,6 +21,10 @@ class ViewController: UIViewController {
     private let stripedAlpha = CGFloat(0.15)
     private let openStroke = 5
     private let solidStroke = -1
+    private let invisibleCardButtonColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    private let selectedCardButtonBorderWidth = CGFloat(3.0)
+    private let selectedCardButtonBorderColor = UIColor.blue.cgColor
+    private let noBorderWidth = CGFloat(0.0)
     
     private(set) var game = SetGame()
     
@@ -43,8 +47,11 @@ class ViewController: UIViewController {
     private func updateViewFromModel() {
         for index in faceUpCardButtons.indices {
             let cardButton = faceUpCardButtons[index]
-            let faceUpCard = game.faceUpCards[index]
-            updateCardUI(cardButton, with: faceUpCard)
+            if game.faceUpCards.indices.contains(index) {
+                updateCardUI(cardButton, with: game.faceUpCards[index])
+            } else {
+                updateCardUI(cardButton, with: nil)
+            }
         }
     }
     
@@ -56,21 +63,27 @@ class ViewController: UIViewController {
         }
     }
     
-    private func updateCardUI(_ cardButton: UIButton, with card: Card) {
+    private func updateCardUI(_ cardButton: UIButton, with card: Card?) {
+        guard card != nil else {
+            cardButton.setTitle(String(), for: UIControl.State.normal)
+            cardButton.setAttributedTitle(NSAttributedString(), for: UIControl.State.normal)
+            cardButton.backgroundColor = invisibleCardButtonColor
+            return
+        }
         cardButton.backgroundColor = cardButtonBackgroundColor
         cardButton.layer.cornerRadius = cardButtonCornerRadius
-        let numberOfShapes = card.numberOfShapes.rawValue
+        let numberOfShapes = card!.numberOfShapes.rawValue
         let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: uiColorFor(card.color).withAlphaComponent(alphaFor(card.shading)),
-            .strokeWidth: strokeFor(card.shading)
+            .foregroundColor: uiColorFor(card!.color).withAlphaComponent(alphaFor(card!.shading)),
+            .strokeWidth: strokeFor(card!.shading)
         ]
-        let attributedText = NSAttributedString(string: String(repeating: symbolForShape(card.shape), count: numberOfShapes) , attributes: attributes)
+        let attributedText = NSAttributedString(string: String(repeating: symbolForShape(card!.shape), count: numberOfShapes) , attributes: attributes)
         cardButton.setAttributedTitle(attributedText, for: UIControl.State.normal)
-        if game.isCardSelected(card) {
-            cardButton.layer.borderWidth = 3.0
-            cardButton.layer.borderColor = UIColor.blue.cgColor
+        if game.isCardSelected(card!) {
+            cardButton.layer.borderWidth = selectedCardButtonBorderWidth
+            cardButton.layer.borderColor = selectedCardButtonBorderColor
         } else {
-            cardButton.layer.borderWidth = 0.0
+            cardButton.layer.borderWidth = noBorderWidth
         }
     }
     

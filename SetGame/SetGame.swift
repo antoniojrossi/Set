@@ -46,9 +46,10 @@ struct SetGame {
         guard faceUpCards.indices.contains(index) else {
             return
         }
-        if selectedCards.count >= maxNumberOfSelectedCards {
+        let selectedCard = faceUpCards[index]
+        if selectedCards.count >= maxNumberOfSelectedCards, !selectedCards.contains(selectedCard) {
             selectedCards.removeAll()
         }
-        selectedCards.insert(faceUpCards[index])
+        selectedCards.insert(selectedCard)
     }
 }
