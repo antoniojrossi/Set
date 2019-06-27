@@ -16,6 +16,28 @@ struct SetGame {
     private var deck: [Card]
     private(set) var faceUpCards: [Card]
     private(set) var selectedCards: Set<Card>
+    var isThereAMatch: Bool {
+        get {
+            guard selectedCards.count >= maxNumberOfSelectedCards else {
+                return false
+            }
+
+            // TODO: find a more elegant way to do this. Add method in card??
+            let matchByNumberOfShapes = selectedCards.map{card in card.numberOfShapes}.dropFirst().reduce(true){match, numberOfShapes in
+                match && numberOfShapes == selectedCards.first?.numberOfShapes
+            }
+            let matchByShape = selectedCards.map{card in card.shape}.dropFirst().reduce(true){match, shape in
+                match && shape == selectedCards.first?.shape
+            }
+            let matchByShading = selectedCards.map{card in card.shading}.dropFirst().reduce(true){match, shading in
+                match && shading == selectedCards.first?.shading
+            }
+            let matchByColor = selectedCards.map{card in card.color}.dropFirst().reduce(true){match, color in
+                match && color == selectedCards.first?.color
+            }
+            return matchByNumberOfShapes || matchByShape || matchByShading || matchByColor
+        }
+    }
     var canDealMoreCards: Bool {
         get {
             return !(deck.isEmpty || faceUpCards.count >= maxNumberOfFaceUpCards)
@@ -56,11 +78,16 @@ struct SetGame {
         guard faceUpCards.indices.contains(index) else {
             return
         }
+
         let selectedCard = faceUpCards[index]
         if selectedCards.count >= maxNumberOfSelectedCards, !selectedCards.contains(selectedCard) {
+            if isThereAMatch {
+                replaceSelectedCardsWithNewOnes()
+            }
             selectedCards.removeAll()
         }
         selectedCards.insert(selectedCard)
+        
     }
     
     mutating func dealCards() {
@@ -68,6 +95,14 @@ struct SetGame {
             if faceUpCards.count < maxNumberOfFaceUpCards, let dealedCard = deck.first {
                 faceUpCards.append(dealedCard)
                 deck.removeFirst()
+            }
+        }
+    }
+    
+    private mutating func replaceSelectedCardsWithNewOnes() {
+        for selectedCard in selectedCards {
+            if !deck.isEmpty, let index = faceUpCards.firstIndex(of: selectedCard) {
+                faceUpCards.replace(at: index, with: deck.removeFirst())
             }
         }
     }

@@ -24,6 +24,7 @@ class ViewController: UIViewController {
     private let invisibleCardButtonColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     private let selectedCardButtonBorderWidth = CGFloat(3.0)
     private let selectedCardButtonBorderColor = UIColor.blue.cgColor
+    private let matchedCardButtonBorderColor = UIColor.green.cgColor
     private let noBorderWidth = CGFloat(0.0)
     
     private(set) var game = SetGame(
@@ -96,7 +97,11 @@ class ViewController: UIViewController {
         cardButton.setAttributedTitle(attributedText, for: UIControl.State.normal)
         if game.isCardSelected(card!) {
             cardButton.layer.borderWidth = selectedCardButtonBorderWidth
-            cardButton.layer.borderColor = selectedCardButtonBorderColor
+            if game.isThereAMatch {
+                cardButton.layer.borderColor = matchedCardButtonBorderColor
+            } else {
+                cardButton.layer.borderColor = selectedCardButtonBorderColor
+            }
         } else {
             cardButton.layer.borderWidth = noBorderWidth
         }
