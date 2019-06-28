@@ -47,7 +47,7 @@ class ViewController: UIViewController {
         game.dealCards()
         updateViewFromModel()
     }
-    @IBAction private func selectCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         if let selectedCardButtonIndex = faceUpCardButtons.firstIndex(of: sender) {
             game.selectCard(byIndex: selectedCardButtonIndex)
             updateViewFromModel()

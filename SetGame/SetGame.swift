@@ -80,14 +80,17 @@ struct SetGame {
         }
 
         let selectedCard = faceUpCards[index]
-        if selectedCards.count >= maxNumberOfSelectedCards, !selectedCards.contains(selectedCard) {
-            if isThereAMatch {
-                replaceSelectedCardsWithNewOnes()
+        if selectedCards.contains(selectedCard), selectedCards.count < maxNumberOfSelectedCards {
+            selectedCards.remove(selectedCard)
+        } else {
+            if selectedCards.count >= maxNumberOfSelectedCards, !selectedCards.contains(selectedCard) {
+                if isThereAMatch {
+                    replaceSelectedCardsWithNewOnes()
+                }
+                selectedCards.removeAll()
             }
-            selectedCards.removeAll()
+            selectedCards.insert(selectedCard)
         }
-        selectedCards.insert(selectedCard)
-        
     }
     
     mutating func dealCards() {
@@ -102,7 +105,8 @@ struct SetGame {
     private mutating func replaceSelectedCardsWithNewOnes() {
         for selectedCard in selectedCards {
             if !deck.isEmpty, let index = faceUpCards.firstIndex(of: selectedCard) {
-                faceUpCards.replace(at: index, with: deck.removeFirst())
+                faceUpCards.replace(at: index, with: deck.removeFirst()
+                )
             }
         }
     }
