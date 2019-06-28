@@ -122,8 +122,8 @@ struct SetGame {
         }
     }
     
-    private func isAMatchOf(_ card1: Card, _ card2: Card, _ card3: Card, by featureValue: ((Card) -> Int)) -> Bool {
-        return (featureValue(card1) == featureValue(card2) && featureValue(card2) == featureValue(card3)) ||
-               ((featureValue(card1) != featureValue(card2)) && (featureValue(card2) != featureValue(card3)) && (featureValue(card1) != featureValue(card3)))
+    private func isAMatchOf(_ card1: Card, _ card2: Card, _ card3: Card, by feature: ((Card) -> Int)) -> Bool {
+        return (feature(card1) == feature(card2) && feature(card2) == feature(card3)) ||
+               ((feature(card1) != feature(card2)) && (feature(card2) != feature(card3)) && (feature(card1) != feature(card3)))
     }
 }
