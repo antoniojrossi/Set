@@ -38,6 +38,15 @@ struct SetGame {
             return matchByNumberOfShapes || matchByShape || matchByShading || matchByColor
         }
     }
+    var isThereAMismatch: Bool {
+        get {
+            guard selectedCards.count >= maxNumberOfSelectedCards else {
+                return false
+            }
+
+            return !isThereAMatch
+        }
+    }
     var canDealMoreCards: Bool {
         get {
             return !(deck.isEmpty || faceUpCards.count >= maxNumberOfFaceUpCards)

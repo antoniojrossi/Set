@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     private let selectedCardButtonBorderWidth = CGFloat(3.0)
     private let selectedCardButtonBorderColor = UIColor.blue.cgColor
     private let matchedCardButtonBorderColor = UIColor.green.cgColor
+    private let mismatchedCardButtonBorderColor = UIColor.red.cgColor
     private let noBorderWidth = CGFloat(0.0)
     
     private(set) var game = SetGame(
@@ -99,6 +100,8 @@ class ViewController: UIViewController {
             cardButton.layer.borderWidth = selectedCardButtonBorderWidth
             if game.isThereAMatch {
                 cardButton.layer.borderColor = matchedCardButtonBorderColor
+            } else if game.isThereAMismatch {
+                cardButton.layer.borderColor = mismatchedCardButtonBorderColor
             } else {
                 cardButton.layer.borderColor = selectedCardButtonBorderColor
             }
