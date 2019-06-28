@@ -14,3 +14,11 @@ extension Array {
         self.insert(newElement, at: index)
     }
 }
+
+extension Array where Element: Equatable {
+    func ocurrencesOf(_ element: Element) -> Int {
+        return reduce(0){numberOfOcurrences, currentElement in
+            return currentElement == element ? numberOfOcurrences + 1 : numberOfOcurrences
+        }
+    }
+}

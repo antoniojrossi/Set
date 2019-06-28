@@ -25,21 +25,12 @@ struct SetGame {
             guard selectedCards.count >= maxNumberOfSelectedCards else {
                 return false
             }
-
-            // TODO: find a more elegant way to do this. Add method in card??
-            let matchByNumberOfShapes = selectedCards.map{card in card.numberOfShapes}.dropFirst().reduce(true){match, numberOfShapes in
-                match && numberOfShapes == selectedCards.first?.numberOfShapes
-            }
-            let matchByShape = selectedCards.map{card in card.shape}.dropFirst().reduce(true){match, shape in
-                match && shape == selectedCards.first?.shape
-            }
-            let matchByShading = selectedCards.map{card in card.shading}.dropFirst().reduce(true){match, shading in
-                match && shading == selectedCards.first?.shading
-            }
-            let matchByColor = selectedCards.map{card in card.color}.dropFirst().reduce(true){match, color in
-                match && color == selectedCards.first?.color
-            }
-            return matchByNumberOfShapes || matchByShape || matchByShading || matchByColor
+            let cards = Array(selectedCards)
+            let matchByNumberOfShapes = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.numberOfShapes.rawValue})
+            let matchByShape = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.shape.rawValue})
+            let matchByShading = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.shading.rawValue})
+            let matchByColor = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.color.rawValue})
+            return [matchByNumberOfShapes, matchByShape, matchByShading, matchByColor].reduce(true){$0 && $1}
         }
     }
     var isThereAMismatch: Bool {
@@ -129,5 +120,10 @@ struct SetGame {
                 }
             }
         }
+    }
+    
+    private func isAMatchOf(_ card1: Card, _ card2: Card, _ card3: Card, by featureValue: ((Card) -> Int)) -> Bool {
+        return (featureValue(card1) == featureValue(card2) && featureValue(card2) == featureValue(card3)) ||
+               ((featureValue(card1) != featureValue(card2)) && (featureValue(card2) != featureValue(card3)) && (featureValue(card1) != featureValue(card3)))
     }
 }

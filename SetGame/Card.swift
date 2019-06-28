@@ -16,19 +16,19 @@ struct Card: CustomStringConvertible, Equatable, Hashable {
         case three
     }
 
-    enum Shape {
+    enum Shape: Int {
         case diamond
         case squiggle
         case stadium
     }
     
-    enum Shading {
+    enum Shading: Int {
         case solid
         case striped
         case open
     }
     
-    enum Color {
+    enum Color: Int {
         case red
         case green
         case purple
