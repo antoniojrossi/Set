@@ -10,12 +10,16 @@ import Foundation
 
 struct SetGame {
     private let maxNumberOfSelectedCards = 3
+    private let pointsPerMatch = 3
+    private let penalizationPerMismatch = -5
+    private let penalizationPerDeselection = -1
     private let initialNumberOfFaceUpCards: Int
     private let maxNumberOfFaceUpCards: Int
     private let cardsPerDeal: Int
     private var deck: [Card]
     private(set) var faceUpCards: [Card]
     private(set) var selectedCards: Set<Card>
+    private(set) var score = 0
     var isThereAMatch: Bool {
         get {
             guard selectedCards.count >= maxNumberOfSelectedCards else {
@@ -90,11 +94,15 @@ struct SetGame {
 
         let selectedCard = faceUpCards[index]
         if selectedCards.contains(selectedCard), selectedCards.count < maxNumberOfSelectedCards {
+            score = max(0, score + penalizationPerDeselection)
             selectedCards.remove(selectedCard)
         } else {
             if selectedCards.count >= maxNumberOfSelectedCards, !selectedCards.contains(selectedCard) {
                 if isThereAMatch {
+                    score += pointsPerMatch
                     replaceSelectedCardsWithNewOnes()
+                } else {
+                    score = max(0, score + penalizationPerMismatch)
                 }
                 selectedCards.removeAll()
             }
@@ -113,9 +121,12 @@ struct SetGame {
     
     private mutating func replaceSelectedCardsWithNewOnes() {
         for selectedCard in selectedCards {
-            if !deck.isEmpty, let index = faceUpCards.firstIndex(of: selectedCard) {
-                faceUpCards.replace(at: index, with: deck.removeFirst()
-                )
+            if let index = faceUpCards.firstIndex(of: selectedCard) {
+                if !deck.isEmpty {
+                    faceUpCards.replace(at: index, with: deck.removeFirst())
+                } else {
+                    faceUpCards.remove(at: index)
+                }
             }
         }
     }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SetGameViewController: UIViewController {
     private let cardButtonCornerRadius = CGFloat(8.0)
     private let cardButtonBackgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
     private let cardSymbolGreen = #colorLiteral(red: 0, green: 0.5603182912, blue: 0, alpha: 1)
@@ -34,8 +34,9 @@ class ViewController: UIViewController {
         cardsPerDeal: 3
     )
     
+    @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private var faceUpCardButtons: [UIButton]!
-    @IBOutlet weak var dealCardsButton: UIButton!
+    @IBOutlet private weak var dealCardsButton: UIButton!
     @IBAction private func newGame(_ sender: UIButton) {
         game = SetGame(
             initialNumberOfFaceUpCards: 12,
@@ -61,20 +62,13 @@ class ViewController: UIViewController {
     
     private func updateViewFromModel() {
         dealCardsButton.isEnabled = game.canDealMoreCards
+        scoreLabel.text = "Score: \(game.score)"
         for index in faceUpCardButtons.indices {
             let cardButton = faceUpCardButtons[index]
             if game.faceUpCards.indices.contains(index) {
                 updateCardUI(cardButton, with: game.faceUpCards[index])
             } else {
                 updateCardUI(cardButton, with: nil)
-            }
-        }
-    }
-    
-    private func updateSelectedCardsViewFromModel() {
-        for index in game.faceUpCards.indices {
-            if game.selectedCards.contains(game.faceUpCards[index]) {
-                
             }
         }
     }
