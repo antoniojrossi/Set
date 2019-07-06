@@ -54,7 +54,6 @@ class SetGameViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
-        print("\(faceUpCardButtons.count)")
         dealCardsButton.isEnabled = game.canDealMoreCards && (numberOfFaceUpCards() < maxNumberOfFaceUpCards)
         scoreLabel.text = "Score: \(game.score)"
         for index in faceUpCardButtons.indices {
