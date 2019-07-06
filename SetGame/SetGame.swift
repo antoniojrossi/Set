@@ -14,7 +14,6 @@ struct SetGame {
     private let penalizationPerMismatch = -5
     private let penalizationPerDeselection = -1
     private let initialNumberOfFaceUpCards: Int
-    private let maxNumberOfFaceUpCards: Int
     private let cardsPerDeal: Int
     private var deck: [Card]
     private(set) var faceUpCards: [Card]
@@ -44,13 +43,12 @@ struct SetGame {
     }
     var canDealMoreCards: Bool {
         get {
-            return !(deck.isEmpty || faceUpCards.count >= maxNumberOfFaceUpCards)
+            return !deck.isEmpty
         }
     }
     
-    init(initialNumberOfFaceUpCards: Int, maxNumberOfFaceUpCards: Int, cardsPerDeal: Int) {
+    init(initialNumberOfFaceUpCards: Int, cardsPerDeal: Int) {
         self.initialNumberOfFaceUpCards = initialNumberOfFaceUpCards
-        self.maxNumberOfFaceUpCards = maxNumberOfFaceUpCards
         self.cardsPerDeal = cardsPerDeal
         deck = Array<Card>()
         faceUpCards = Array<Card>()
@@ -103,7 +101,7 @@ struct SetGame {
     
     mutating func dealCards() {
         for _ in (0..<cardsPerDeal) {
-            if faceUpCards.count < maxNumberOfFaceUpCards, let dealedCard = deck.first {
+            if let dealedCard = deck.first {
                 faceUpCards.append(dealedCard)
                 deck.removeFirst()
             }

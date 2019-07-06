@@ -27,22 +27,15 @@ class SetGameViewController: UIViewController {
     private let matchedCardButtonBorderColor = UIColor.green.cgColor
     private let mismatchedCardButtonBorderColor = UIColor.red.cgColor
     private let noBorderWidth = CGFloat(0.0)
+    private let maxNumberOfFaceUpCards = 24
     
-    private(set) var game = SetGame(
-        initialNumberOfFaceUpCards: 12,
-        maxNumberOfFaceUpCards: 24,
-        cardsPerDeal: 3
-    )
+    private(set) var game = SetGame(initialNumberOfFaceUpCards: 12, cardsPerDeal: 3)
     
     @IBOutlet private weak var scoreLabel: UILabel!
     @IBOutlet private var faceUpCardButtons: [UIButton]!
     @IBOutlet private weak var dealCardsButton: UIButton!
     @IBAction private func newGame(_ sender: UIButton) {
-        game = SetGame(
-            initialNumberOfFaceUpCards: 12,
-            maxNumberOfFaceUpCards: 24,
-            cardsPerDeal: 3
-        )
+        game = SetGame(initialNumberOfFaceUpCards: 12, cardsPerDeal: 3)
         updateViewFromModel()
     }
     @IBAction private func dealCards(_ sender: UIButton) {
@@ -61,7 +54,8 @@ class SetGameViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
-        dealCardsButton.isEnabled = game.canDealMoreCards
+        print("\(faceUpCardButtons.count)")
+        dealCardsButton.isEnabled = game.canDealMoreCards && (numberOfFaceUpCards() < maxNumberOfFaceUpCards)
         scoreLabel.text = "Score: \(game.score)"
         for index in faceUpCardButtons.indices {
             let cardButton = faceUpCardButtons[index]
@@ -132,5 +126,9 @@ class SetGameViewController: UIViewController {
         case .open: return openStroke
         case .solid, .striped: return solidStroke
         }
+    }
+    
+    private func numberOfFaceUpCards() -> Int {
+        return faceUpCardButtons.filter{$0.backgroundColor == cardButtonBackgroundColor}.count
     }
 }
