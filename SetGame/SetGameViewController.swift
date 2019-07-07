@@ -54,16 +54,8 @@ class SetGameViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
-        dealCardsButton.isEnabled = game.canDealMoreCards && (numberOfFaceUpCards() < maxNumberOfFaceUpCards)
+        dealCardsButton.isEnabled = game.canDealMoreCards
         scoreLabel.text = "Score: \(game.score)"
-        for index in faceUpCardButtons.indices {
-            let cardButton = faceUpCardButtons[index]
-            if game.faceUpCards.indices.contains(index) {
-                updateCardUI(cardButton, with: game.faceUpCards[index])
-            } else {
-                updateCardUI(cardButton, with: nil)
-            }
-        }
     }
     
     private func updateCardUI(_ cardButton: UIButton, with card: Card?) {
@@ -125,9 +117,5 @@ class SetGameViewController: UIViewController {
         case .open: return openStroke
         case .solid, .striped: return solidStroke
         }
-    }
-    
-    private func numberOfFaceUpCards() -> Int {
-        return faceUpCardButtons.filter{$0.backgroundColor == cardButtonBackgroundColor}.count
     }
 }
