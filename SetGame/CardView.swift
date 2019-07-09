@@ -19,15 +19,15 @@ class CardView: UIView {
         return (CGFloat(shapeViews.count) * shapeHeight) + (CGFloat(shapeViews.count - 1) * shapeMarginHeight)
     }
     
-    var numberOfShapes: Int = 2 {
+    var numberOfShapes: Int = 1 {
         didSet {
             setNeedsDisplay()
             setNeedsLayout()
         }
     }
     var shapeColor: UIColor = UIColor.purple
-    var shading: ShapeView.Shading = .striped
-    var shape: ShapeView.Shape = .stadium
+    var shading: ShapeView.Shading = .open
+    var shape: ShapeView.Shape = .squiggle
     
     private lazy var shapeViews: [ShapeView] = {
         (0..<numberOfShapes).map{ _ in createShapeView() }

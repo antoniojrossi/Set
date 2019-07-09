@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension Array {
     mutating func replace(at index: Int, with newElement: Element) {
@@ -20,5 +21,11 @@ extension Array where Element: Equatable {
         return reduce(0){numberOfOcurrences, currentElement in
             return currentElement == element ? numberOfOcurrences + 1 : numberOfOcurrences
         }
+    }
+}
+
+extension CGPoint {
+    func midPoint(to destination: CGPoint) -> CGPoint {
+        return CGPoint(x: (x + destination.x) / 2, y: (y + destination.y) / 2)
     }
 }
