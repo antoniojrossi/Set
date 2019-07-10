@@ -19,14 +19,14 @@ class CardView: UIView {
         return (CGFloat(shapeViews.count) * shapeHeight) + (CGFloat(shapeViews.count - 1) * shapeMarginHeight)
     }
     
-    var numberOfShapes: Int = 1 {
+    var numberOfShapes: Int = 3 {
         didSet {
             setNeedsDisplay()
             setNeedsLayout()
         }
     }
     var shapeColor: UIColor = UIColor.purple
-    var shading: ShapeView.Shading = .open
+    var shading: ShapeView.Shading = .striped
     var shape: ShapeView.Shape = .squiggle
     
     private lazy var shapeViews: [ShapeView] = {
@@ -34,25 +34,35 @@ class CardView: UIView {
     }()
     
     private func createShapeView() -> ShapeView {
-        let shapeView = ShapeView()
+        var shapeView = ShapeView()
+        switch shape {
+        case .stadium:
+            shapeView = StadiumView()
+        case .squiggle:
+            shapeView = SquiggleView()
+        case .diamond:
+            shapeView = DiamondView()
+        }
+        addSubview(configure(shapeView))
+        return shapeView
+    }
+    
+    private func configure(_ shapeView: ShapeView) -> ShapeView {
         shapeView.isOpaque = true
         shapeView.backgroundColor = UIColor.clear
         shapeView.color = shapeColor
         shapeView.shading = shading
-        shapeView.shape = shape
-        addSubview(shapeView)
         return shapeView
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        for shapeView in shapeViews {
+        for (index, shapeView) in shapeViews.enumerated() {
             // ¿UIStackView + Autolayout?
-            let index = CGFloat(shapeViews.firstIndex(of: shapeView) ?? 0)
-            let shapeHeightOffset = (index * shapeHeight) + (index * shapeMarginHeight)
+            let distanceBetweenShapes = (CGFloat(index) * shapeHeight) + (CGFloat(index) * shapeMarginHeight)
             shapeView.frame = CGRect(
                 x: bounds.origin.x + ((bounds.width - shapeWidth) / 2),
-                y: bounds.origin.y + (bounds.height - totalShapesHeight) / CGFloat(2.0) + shapeHeightOffset,
+                y: bounds.origin.y + (bounds.height - totalShapesHeight) / CGFloat(2) + distanceBetweenShapes,
                 width: shapeWidth,
                 height: shapeHeight
             )
