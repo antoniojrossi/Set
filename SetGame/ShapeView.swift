@@ -24,8 +24,8 @@ class ShapeView: UIView {
     }
     
     // TODO: Seguramente haya que calcular este valor con proporción al tamaño de la carta
-    static let lineWidth: CGFloat = 2.0
-    static let stripeWidth: CGFloat = 3.5
+    lazy var lineWidth: CGFloat = bounds.width * Ratios.lineWidthRatio
+    lazy var stripeWidth: CGFloat = bounds.width * Ratios.stripeWidth
     
     var color: UIColor = UIColor.black
     var shading: Shading = .open
@@ -42,7 +42,7 @@ class ShapeView: UIView {
     }
     
     private func fillOpen(_ path: UIBezierPath) {
-        path.lineWidth = ShapeView.lineWidth
+        path.lineWidth = lineWidth
         color.setStroke()
         path.stroke()
     }
@@ -55,11 +55,11 @@ class ShapeView: UIView {
     private func fillStriped(_ path: UIBezierPath) {
         path.addClip()
         var lastColor = color
-        for offsetX in stride(from: bounds.minX, to: bounds.maxX, by: ShapeView.stripeWidth) {
+        for offsetX in stride(from: bounds.minX, to: bounds.maxX, by: stripeWidth) {
             let stripeRect = CGRect(
                 x: offsetX,
                 y: bounds.minY,
-                width: ShapeView.stripeWidth,
+                width: stripeWidth,
                 height: bounds.height
             )
             let stripe = UIBezierPath(rect: stripeRect)
@@ -70,5 +70,12 @@ class ShapeView: UIView {
         }
         color.setStroke()
         path.stroke()
+    }
+}
+
+extension ShapeView {
+    private struct Ratios {
+        static let lineWidthRatio: CGFloat = 0.01
+        static let stripeWidth: CGFloat = 0.05
     }
 }

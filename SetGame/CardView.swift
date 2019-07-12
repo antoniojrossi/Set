@@ -15,6 +15,8 @@ class CardView: UIView {
     private var shapeWidth: CGFloat { return bounds.width * Ratios.shapeWidthRatio }
     private var shapeMarginHeight: CGFloat { return bounds.height * Ratios.shapeMarginRatio }
     private var shadowOffset: CGFloat { return bounds.width * Ratios.shadowOffsetRatio }
+    private var cardLineWidth: CGFloat {return bounds.width * Ratios.lineWidthRatio}
+    private var cardCornerRadius: CGFloat { return bounds.width * Ratios.cardCornerRadiusRatio }
     private var totalShapesHeight: CGFloat {
         return (CGFloat(shapeViews.count) * shapeHeight) + (CGFloat(shapeViews.count - 1) * shapeMarginHeight)
     }
@@ -74,14 +76,14 @@ class CardView: UIView {
     }
     
     private func drawCardBack() {
-        let cardBack = UIBezierPath(roundedRect: bounds, cornerRadius: Ratios.cardCornerRadius)
+        let cardBack = UIBezierPath(roundedRect: bounds, cornerRadius: cardCornerRadius)
         cardBack.addClip()
-        cardBack.lineWidth = 2.0
+        cardBack.lineWidth = cardLineWidth
         cardBackgroundColor.setFill()
         cardBorderColor.setStroke()
         cardBack.fill()
         cardBack.stroke()
-        drawCardShadow(cardBack)
+        //drawCardShadow(cardBack)
     }
     
     private func drawCardShadow(_ cardBack: UIBezierPath) {
@@ -96,10 +98,11 @@ class CardView: UIView {
 
 extension CardView {
     private struct Ratios {
-        static let cardCornerRadius: CGFloat = 16.0
+        static let cardCornerRadiusRatio: CGFloat = 0.08
         static let shapeWidthRatio: CGFloat = 0.75
         static let shapeHeightRatio: CGFloat = 0.2
         static let shapeMarginRatio: CGFloat = 0.05
         static let shadowOffsetRatio: CGFloat = 0.01
+        static let lineWidthRatio: CGFloat = 0.015
     }
 }

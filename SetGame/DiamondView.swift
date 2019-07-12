@@ -12,10 +12,10 @@ class DiamondView: ShapeView {
 
     override func draw(_ rect: CGRect) {
         let path = UIBezierPath()
-        path.move(to: CGPoint(x: bounds.minX + ShapeView.lineWidth, y: bounds.midY))
-        path.addLine(to: CGPoint(x: bounds.midX, y: bounds.minY + ShapeView.lineWidth))
-        path.addLine(to: CGPoint(x: bounds.maxX - ShapeView.lineWidth, y: bounds.midY))
-        path.addLine(to: CGPoint(x: bounds.midX, y: bounds.maxY - ShapeView.lineWidth))
+        path.move(to: CGPoint(x: bounds.minX + lineWidth, y: bounds.midY))
+        path.addLine(to: CGPoint(x: bounds.midX, y: bounds.minY + lineWidth))
+        path.addLine(to: CGPoint(x: bounds.maxX - lineWidth, y: bounds.midY))
+        path.addLine(to: CGPoint(x: bounds.midX, y: bounds.maxY - lineWidth))
         path.close()
         applyShading(to: path)
     }

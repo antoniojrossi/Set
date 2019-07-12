@@ -9,44 +9,26 @@
 import UIKit
 
 class SetGameViewController: UIViewController {
-    private let cardButtonCornerRadius = CGFloat(8.0)
-    private let cardButtonBackgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
-    private let cardSymbolGreen = #colorLiteral(red: 0, green: 0.5603182912, blue: 0, alpha: 1)
+    private let cardSymbolGreen = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
     private let cardSymbolPurple = #colorLiteral(red: 0.8446564078, green: 0.5145705342, blue: 1, alpha: 1)
-    private let cardSymbolRed = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
-    private let diamodSymbol = "▲"
-    private let squiggleSymbol = "●"
-    private let stadiumSymbol = "■"
-    private let solidAlpha = CGFloat(1)
-    private let stripedAlpha = CGFloat(0.15)
-    private let openStroke = 5
-    private let solidStroke = -1
-    private let invisibleCardButtonColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    private let cardSymbolRed = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
     private let selectedCardButtonBorderWidth = CGFloat(3.0)
     private let selectedCardButtonBorderColor = UIColor.blue.cgColor
     private let matchedCardButtonBorderColor = UIColor.green.cgColor
     private let mismatchedCardButtonBorderColor = UIColor.red.cgColor
-    private let noBorderWidth = CGFloat(0.0)
-    private let maxNumberOfFaceUpCards = 24
     
-    private(set) var game = SetGame(initialNumberOfFaceUpCards: 12, cardsPerDeal: 3)
+    private(set) var game = SetGame(initialNumberOfFaceUpCards: 5, cardsPerDeal: 3)
     
+    @IBOutlet weak var playingCardViews: GridView!
     @IBOutlet private weak var scoreLabel: UILabel!
-    @IBOutlet private var faceUpCardButtons: [UIButton]!
     @IBOutlet private weak var dealCardsButton: UIButton!
     @IBAction private func newGame(_ sender: UIButton) {
-        game = SetGame(initialNumberOfFaceUpCards: 12, cardsPerDeal: 3)
+        game = SetGame(initialNumberOfFaceUpCards: 5, cardsPerDeal: 3)
         updateViewFromModel()
     }
     @IBAction private func dealCards(_ sender: UIButton) {
         game.dealCards()
         updateViewFromModel()
-    }
-    @IBAction private func touchCard(_ sender: UIButton) {
-        if let selectedCardButtonIndex = faceUpCardButtons.firstIndex(of: sender) {
-            game.selectCard(byIndex: selectedCardButtonIndex)
-            updateViewFromModel()
-        }
     }
     
     override func viewDidLoad() {
@@ -54,38 +36,17 @@ class SetGameViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
+        playingCardViews.removeSubviews()
         dealCardsButton.isEnabled = game.canDealMoreCards
         scoreLabel.text = "Score: \(game.score)"
-    }
-    
-    private func updateCardUI(_ cardButton: UIButton, with card: Card?) {
-        guard card != nil else {
-            cardButton.setTitle(String(), for: UIControl.State.normal)
-            cardButton.setAttributedTitle(NSAttributedString(), for: UIControl.State.normal)
-            cardButton.backgroundColor = invisibleCardButtonColor
-            cardButton.layer.borderWidth = noBorderWidth
-            return
-        }
-        cardButton.backgroundColor = cardButtonBackgroundColor
-        cardButton.layer.cornerRadius = cardButtonCornerRadius
-        let numberOfShapes = card!.numberOfShapes.rawValue
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: uiColorFor(card!.color).withAlphaComponent(alphaFor(card!.shading)),
-            .strokeWidth: strokeFor(card!.shading)
-        ]
-        let attributedText = NSAttributedString(string: String(repeating: symbolForShape(card!.shape), count: numberOfShapes) , attributes: attributes)
-        cardButton.setAttributedTitle(attributedText, for: UIControl.State.normal)
-        if game.isCardSelected(card!) {
-            cardButton.layer.borderWidth = selectedCardButtonBorderWidth
-            if game.isThereAMatch {
-                cardButton.layer.borderColor = matchedCardButtonBorderColor
-            } else if game.isThereAMismatch {
-                cardButton.layer.borderColor = mismatchedCardButtonBorderColor
-            } else {
-                cardButton.layer.borderColor = selectedCardButtonBorderColor
-            }
-        } else {
-            cardButton.layer.borderWidth = noBorderWidth
+        for card in game.faceUpCards {
+            let cardView = CardView()
+            cardView.numberOfShapes = card.numberOfShapes.rawValue
+            cardView.shapeColor = uiColorFor(card.color)
+            cardView.shape = viewShape(for: card.shape)
+            cardView.shading = viewShading(for: card.shading)
+            cardView.isOpaque = false
+            playingCardViews.addSubview(cardView)
         }
     }
     
@@ -97,25 +58,19 @@ class SetGameViewController: UIViewController {
         }
     }
     
-    private func symbolForShape(_ shape: Card.Shape) -> String {
-        switch shape {
-        case .diamond: return diamodSymbol
-        case .squiggle: return squiggleSymbol
-        case .stadium: return stadiumSymbol
+    private func viewShape(for cardShape: Card.Shape) -> ShapeView.Shape {
+        switch cardShape {
+        case .diamond: return ShapeView.Shape.diamond
+        case .squiggle: return ShapeView.Shape.squiggle
+        case .stadium: return ShapeView.Shape.stadium
         }
     }
     
-    private func alphaFor(_ shading: Card.Shading) -> CGFloat {
-        switch shading {
-        case .open, .solid: return solidAlpha
-        case .striped: return stripedAlpha
-        }
-    }
-    
-    private func strokeFor(_ shading: Card.Shading) -> Int {
-        switch shading {
-        case .open: return openStroke
-        case .solid, .striped: return solidStroke
+    private func viewShading(for cardShading: Card.Shading) -> ShapeView.Shading {
+        switch cardShading {
+        case .open: return ShapeView.Shading.open
+        case .solid: return ShapeView.Shading.solid
+        case .striped: return ShapeView.Shading.striped
         }
     }
 }
