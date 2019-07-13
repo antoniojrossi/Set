@@ -99,7 +99,7 @@ struct SetGame {
         }
     }
     
-    mutating func dealCards() {
+    mutating func drawCards() {
         for _ in (0..<cardsPerDeal) {
             if let dealedCard = deck.first {
                 faceUpCards.append(dealedCard)

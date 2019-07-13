@@ -9,31 +9,48 @@ import UIKit
 
 @IBDesignable
 class CardView: UIView {
-    private let cardBackgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 1)
-    private let cardBorderColor = UIColor.lightGray
+    private let cardBackgroundColor = #colorLiteral(red: 1, green: 0.9737340009, blue: 0.9157413435, alpha: 1)
     private var shapeHeight: CGFloat { return bounds.height * Ratios.shapeHeightRatio }
     private var shapeWidth: CGFloat { return bounds.width * Ratios.shapeWidthRatio }
     private var shapeMarginHeight: CGFloat { return bounds.height * Ratios.shapeMarginRatio }
-    private var shadowOffset: CGFloat { return bounds.width * Ratios.shadowOffsetRatio }
-    private var cardLineWidth: CGFloat {return bounds.width * Ratios.lineWidthRatio}
+    private var shadowOffset: CGFloat = 1.5
     private var cardCornerRadius: CGFloat { return bounds.width * Ratios.cardCornerRadiusRatio }
     private var totalShapesHeight: CGFloat {
         return (CGFloat(shapeViews.count) * shapeHeight) + (CGFloat(shapeViews.count - 1) * shapeMarginHeight)
     }
     
+    var borderColor = UIColor.lightGray
+    var borderWidth: CGFloat = 1.0
     var numberOfShapes: Int = 3 {
         didSet {
             setNeedsDisplay()
             setNeedsLayout()
         }
     }
-    var shapeColor: UIColor = UIColor.purple
-    var shading: ShapeView.Shading = .striped
-    var shape: ShapeView.Shape = .squiggle
+    var shapeColor: UIColor = UIColor.purple {
+        didSet{
+            setNeedsDisplay()
+            setNeedsLayout()
+        }
+    }
+    var shading: ShapeView.Shading = .striped {
+        didSet{
+            setNeedsDisplay()
+            setNeedsLayout()
+        }
+    }
+    var shape: ShapeView.Shape = .squiggle {
+        didSet{
+            setNeedsDisplay()
+            setNeedsLayout()
+        }
+    }
     
     private lazy var shapeViews: [ShapeView] = {
         (0..<numberOfShapes).map{ _ in createShapeView() }
     }()
+    
+    private var shadowPath: UIBezierPath = UIBezierPath()
     
     private func createShapeView() -> ShapeView {
         var shapeView = ShapeView()
@@ -60,7 +77,6 @@ class CardView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         for (index, shapeView) in shapeViews.enumerated() {
-            // ¿UIStackView + Autolayout?
             let distanceBetweenShapes = (CGFloat(index) * shapeHeight) + (CGFloat(index) * shapeMarginHeight)
             shapeView.frame = CGRect(
                 x: bounds.origin.x + ((bounds.width - shapeWidth) / 2),
@@ -69,6 +85,7 @@ class CardView: UIView {
                 height: shapeHeight
             )
         }
+        drawCardShadow()
     }
     
     override func draw(_ rect: CGRect) {
@@ -78,16 +95,15 @@ class CardView: UIView {
     private func drawCardBack() {
         let cardBack = UIBezierPath(roundedRect: bounds, cornerRadius: cardCornerRadius)
         cardBack.addClip()
-        cardBack.lineWidth = cardLineWidth
+        cardBack.lineWidth = borderWidth
         cardBackgroundColor.setFill()
-        cardBorderColor.setStroke()
+        borderColor.setStroke()
         cardBack.fill()
         cardBack.stroke()
-        //drawCardShadow(cardBack)
     }
     
-    private func drawCardShadow(_ cardBack: UIBezierPath) {
-        let shadowPath = cardBack
+    private func drawCardShadow() {
+        shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: cardCornerRadius)
         layer.masksToBounds = false
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: shadowOffset, height: shadowOffset)
@@ -102,7 +118,6 @@ extension CardView {
         static let shapeWidthRatio: CGFloat = 0.75
         static let shapeHeightRatio: CGFloat = 0.2
         static let shapeMarginRatio: CGFloat = 0.05
-        static let shadowOffsetRatio: CGFloat = 0.01
         static let lineWidthRatio: CGFloat = 0.015
     }
 }

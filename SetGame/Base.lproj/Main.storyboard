@@ -29,7 +29,7 @@
                                 <rect key="frame" x="319" y="44" width="75" height="30"/>
                                 <state key="normal" title="Deal Cards"/>
                                 <connections>
-                                    <action selector="dealCards:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3u5-6a-Agj"/>
+                                    <action selector="drawCards:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3u5-6a-Agj"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHD-0v-oHX">
@@ -40,7 +40,7 @@
                             </label>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y3K-Jj-am2" customClass="GridView" customModule="SetGame" customModuleProvider="target">
                                 <rect key="frame" x="20" y="82" width="374" height="780"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -62,7 +62,7 @@
                     </view>
                     <connections>
                         <outlet property="dealCardsButton" destination="bGN-ho-5iD" id="8h5-8g-TNA"/>
-                        <outlet property="playingCardViews" destination="y3K-Jj-am2" id="eH0-M0-fib"/>
+                        <outlet property="playingCardGridView" destination="y3K-Jj-am2" id="eH0-M0-fib"/>
                         <outlet property="scoreLabel" destination="dHD-0v-oHX" id="4ZQ-CZ-CoP"/>
                     </connections>
                 </viewController>
