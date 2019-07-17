@@ -32,6 +32,15 @@ class SetGameViewController: UIViewController {
         updateViewFromModel()
     }
     
+    @IBAction func randomizeFaceUpCards(_ sender: UIRotationGestureRecognizer) {
+        switch sender.state {
+        case .ended:
+            game.randomizeFaceUpCards()
+            updateViewFromModel()
+        default: break
+        }
+    }
+    
     override func viewDidLoad() {
         playingCardGridView.gridViewAspectRatio = (height: 8, width: 5)
         updateViewFromModel()

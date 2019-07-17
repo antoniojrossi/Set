@@ -99,6 +99,10 @@ struct SetGame {
         }
     }
     
+    mutating func randomizeFaceUpCards() {
+        faceUpCards.shuffle()
+    }
+    
     mutating func drawCards() {
         for _ in (0..<cardsPerDeal) {
             if let dealedCard = deck.first {
