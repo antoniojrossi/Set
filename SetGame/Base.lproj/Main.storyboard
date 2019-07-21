@@ -65,7 +65,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="dealCardsButton" destination="bGN-ho-5iD" id="8h5-8g-TNA"/>
+                        <outlet property="drawCardsButton" destination="bGN-ho-5iD" id="8h5-8g-TNA"/>
                         <outlet property="playingCardGridView" destination="y3K-Jj-am2" id="eH0-M0-fib"/>
                         <outlet property="scoreLabel" destination="dHD-0v-oHX" id="4ZQ-CZ-CoP"/>
                     </connections>

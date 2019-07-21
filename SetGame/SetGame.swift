@@ -47,9 +47,9 @@ struct SetGame {
         }
     }
     
-    init(initialNumberOfFaceUpCards: Int, cardsPerDeal: Int) {
+    init(initialNumberOfFaceUpCards: Int, drawCardsBy: Int) {
         self.initialNumberOfFaceUpCards = initialNumberOfFaceUpCards
-        self.cardsPerDeal = cardsPerDeal
+        self.cardsPerDeal = drawCardsBy
         deck = Array<Card>()
         faceUpCards = Array<Card>()
         selectedCards = Set<Card>()
@@ -76,12 +76,11 @@ struct SetGame {
         return selectedCards.contains(card)
     }
     
-    mutating func selectCard(byIndex index: Int) {
-        guard faceUpCards.indices.contains(index) else {
+    mutating func selectCard(_ selectedCard: Card) {
+        guard faceUpCards.contains(selectedCard) else {
             return
         }
 
-        let selectedCard = faceUpCards[index]
         if selectedCards.contains(selectedCard), selectedCards.count < maxNumberOfSelectedCards {
             score = max(0, score + penalizationPerDeselection)
             selectedCards.remove(selectedCard)
@@ -105,8 +104,8 @@ struct SetGame {
     
     mutating func drawCards() {
         for _ in (0..<cardsPerDeal) {
-            if let dealedCard = deck.first {
-                faceUpCards.append(dealedCard)
+            if let drawCard = deck.first {
+                faceUpCards.append(drawCard)
                 deck.removeFirst()
             }
         }

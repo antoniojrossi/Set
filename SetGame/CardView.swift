@@ -19,8 +19,8 @@ class CardView: UIView {
         return (CGFloat(shapeViews.count) * shapeHeight) + (CGFloat(shapeViews.count - 1) * shapeMarginHeight)
     }
     
-    var borderColor = UIColor.lightGray
-    var borderWidth: CGFloat = 1.0
+    var borderColor = UIColor.lightGray { didSet { setNeedsDisplay() } }
+    var borderWidth: CGFloat = 1.0 { didSet { setNeedsDisplay() } }
     var numberOfShapes: Int = 3 {
         didSet {
             setNeedsDisplay()
@@ -46,11 +46,29 @@ class CardView: UIView {
         }
     }
     
+    override var description: String {
+        return "\(super.description) [\(numberOfShapes) \(shading) \(shapeColor) \(shape)]"
+    }
+    
     private lazy var shapeViews: [ShapeView] = {
         (0..<numberOfShapes).map{ _ in createShapeView() }
     }()
     
     private var shadowPath: UIBezierPath = UIBezierPath()
+    
+    convenience init(tapGestureRecognizer: UITapGestureRecognizer,
+                     numberOfShapes: Int,
+                     shapeColor: UIColor,
+                     shape: ShapeView.Shape,
+                     shading: ShapeView.Shading) {
+        self.init()
+        self.addGestureRecognizer(tapGestureRecognizer)
+        self.numberOfShapes = numberOfShapes
+        self.shapeColor = shapeColor
+        self.shape = shape
+        self.shading = shading
+        self.isOpaque = false
+    }
     
     private func createShapeView() -> ShapeView {
         var shapeView = ShapeView()
