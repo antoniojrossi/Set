@@ -17,79 +17,89 @@ class SetGameViewController: UIViewController {
     private let matchedCardButtonBorderColor = UIColor.green.cgColor
     private let mismatchedCardButtonBorderColor = UIColor.red.cgColor
     private let defaultCardBorderWidth: CGFloat = 1.0
-    private var viewForCard = [Card: CardView]()
-    private var cardForView = [CardView: Card]()
-    private(set) var game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3) {
-        didSet {
-            setUpInitialCardViews()
+    private(set) var game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3)
+    private var cardForCarView: [CardView: Card] = [CardView: Card]()
+    
+    @IBOutlet weak var playingCardsView: GridView!
+    @IBOutlet private weak var scoreLabel: UILabel!
+    @IBOutlet weak var deckView: DeckView!
+    
+    @IBAction func drawCards(_ sender: UITapGestureRecognizer) {
+        switch sender.state {
+        case .ended:
+            if game.canDealMoreCards {
+                game.drawCards()
+                updateViewFromModel()
+            }
+        default: break
         }
     }
-    @IBOutlet weak var playingCardGridView: GridView!
-    @IBOutlet private weak var scoreLabel: UILabel!
-    @IBOutlet private weak var drawCardsButton: UIButton!
     
-    @IBAction private func newGame(_ sender: UIButton) {
+    @IBAction func newGame(_ sender: UITapGestureRecognizer) {
         game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3)
-    }
-    @IBAction private func drawCards(_ sender: UIButton) {
-        game.drawCards()
-        updateViewFromModel()
+        configureViews()
     }
     
     override func viewDidLoad() {
-        playingCardGridView.gridViewAspectRatio = (height: 8, width: 5)
-        setUpInitialCardViews()
+        playingCardsView.gridViewAspectRatio = (height: 8, width: 5)
+        configureViews()
     }
     
-    private func setUpInitialCardViews() {
-        playingCardGridView.removeSubviews()
-        viewForCard.removeAll()
-        cardForView.removeAll()
+    private func configureViews() {
+        playingCardsView.removeSubviews()
+        cardForCarView.removeAll()
+        deckView.cardsFaceUp = false
+        deckView.viewGenerator = { CardView(facedUp: false, showShadow: false) }
         updateViewFromModel()
     }
     
     private func updateViewFromModel() {
-        drawCardsButton.isEnabled = game.canDealMoreCards
-        scoreLabel.text = "Score: \(game.score)"
-        for card in game.faceUpCards {
-            if let cardView = viewForCard[card] {
-                if game.isCardSelected(card) {
-                    cardView.borderColor = UIColor(cgColor: selectedCardButtonBorderColor)
-                    cardView.borderWidth = selectedCardButtonBorderWidth
-                    if game.isThereAMatch {
-                        cardView.borderColor = UIColor(cgColor: matchedCardButtonBorderColor)
-                    } else if game.isThereAMismatch {
-                        cardView.borderColor = UIColor(cgColor: mismatchedCardButtonBorderColor)
-                    } else {
+        scoreLabel.text = "\(game.score)"
+        deckView.numberOfCards = game.numberOfCardsInDeck
+        for (index, card) in game.faceUpCards.enumerated() {
+            if let cardView = playingCardsView.view(at: index) as? CardView {
+                if cardForCarView[cardView] == card {
+                    if game.isCardSelected(card) {
                         cardView.borderColor = UIColor(cgColor: selectedCardButtonBorderColor)
+                        cardView.borderWidth = selectedCardButtonBorderWidth
+                        if game.isThereAMatch {
+                            cardView.borderColor = UIColor(cgColor: matchedCardButtonBorderColor)
+                        } else if game.isThereAMismatch {
+                            cardView.borderColor = UIColor(cgColor: mismatchedCardButtonBorderColor)
+                        } else {
+                            cardView.borderColor = UIColor(cgColor: selectedCardButtonBorderColor)
+                        }
+                    } else {
+                        cardView.borderWidth = defaultCardBorderWidth
                     }
                 } else {
-                    cardView.borderWidth = defaultCardBorderWidth
+                    createCardView(for: card, andAddToPlayingCardsViewAt: index)
                 }
             } else {
-                createCardView(for: card)
+                createCardView(for: card, andAddToPlayingCardsViewAt: index)
             }
         }
     }
     
     @objc func selectCard(recognizer: UITapGestureRecognizer) {
-        if let cardView = recognizer.view as? CardView {
-            game.selectCard(cardForView[cardView]!)
+        if let cardView = recognizer.view as? CardView, let cardViewIndex = playingCardsView.index(of: cardView) {
+            game.selectCard(at: cardViewIndex)
             updateViewFromModel()
         }
     }
     
-    private func createCardView(for card: Card) {
+    private func createCardView(for card: Card, andAddToPlayingCardsViewAt index: Int) {
         let cardView = CardView(
             tapGestureRecognizer: UITapGestureRecognizer(target: self, action: #selector(selectCard(recognizer:))),
             numberOfShapes: card.numberOfShapes.rawValue,
             shapeColor: uiColorFor(card.color),
             shape: viewShape(for: card.shape),
-            shading: viewShading(for: card.shading)
+            shading: viewShading(for: card.shading),
+            facedUp: true,
+            showShadow: true
         )
-        viewForCard[card] = cardView
-        cardForView[cardView] = card
-        playingCardGridView.addSubview(cardView)
+        cardForCarView[cardView] = card
+        playingCardsView.addSubview(cardView, at: index)
     }
     
     private func uiColorFor(_ color: Card.Color) -> UIColor {

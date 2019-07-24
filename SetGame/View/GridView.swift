@@ -10,13 +10,16 @@ import UIKit
 
 @IBDesignable
 class GridView: UIView {
+    
+    private struct Ratios {
+        static let distanceBetweenCardsRatio: CGFloat = 0.05
+    }
     var gridViewAspectRatio: (height: CGFloat, width: CGFloat) = (height: 8, width: 5)
-    private var numberOfColumns: Int { return gridDimensions().columns }
-    private var numberOfRows: Int { return gridDimensions().rows }
+    private var dimension: (columns: Int, rows: Int) { return gridDimensions()}
     
     override func layoutSubviews() {
-        let gridWidth = bounds.width / CGFloat(numberOfColumns)
-        let gridHeight = bounds.height / CGFloat(numberOfRows)
+        let gridWidth = bounds.width / CGFloat(dimension.columns)
+        let gridHeight = bounds.height / CGFloat(dimension.rows)
         let horizontalDelta = gridWidth < gridHeight ? gridWidth * Ratios.distanceBetweenCardsRatio : 0
         let verticalDelta = gridWidth < gridHeight ? 0 : gridHeight * Ratios.distanceBetweenCardsRatio
         
@@ -31,21 +34,47 @@ class GridView: UIView {
         }
         
         for (index, view) in subviews.enumerated() {
-            let dx: CGFloat = ((gridWidth - viewWidth) / CGFloat(2)) + (CGFloat(index % numberOfColumns) * gridWidth)
-            let dy: CGFloat = ((gridHeight - viewHeight) / CGFloat(2)) + (CGFloat(index / numberOfColumns) * gridHeight)
-            view.frame = CGRect(
-                x: bounds.origin.x + dx,
-                y: bounds.origin.y + dy,
-                width: viewWidth,
-                height: viewHeight
+            let dx: CGFloat = ((gridWidth - viewWidth) / CGFloat(2)) + (CGFloat(index % dimension.columns) * gridWidth)
+            let dy: CGFloat = ((gridHeight - viewHeight) / CGFloat(2)) + (CGFloat(index / dimension.columns) * gridHeight)
+            UIView.transition(
+                with: view,
+                duration: 0.75,
+                options: [.allowUserInteraction, .curveEaseInOut],
+                animations: {
+                    view.frame = CGRect(
+                        x: self.bounds.origin.x + dx,
+                        y: self.bounds.origin.y + dy,
+                        width: viewWidth,
+                        height: viewHeight
+                    )
+                }
             )
         }
+    }
+    
+    func view(at index: Int) -> UIView? {
+        if subviews.indices.contains(index) {
+            return subviews[index]
+        } else {
+            return nil
+        }
+    }
+    
+    func index(of view: UIView) -> Int? {
+        return subviews.firstIndex(of: view)
     }
     
     func removeSubviews() {
         for view in subviews {
             view.removeFromSuperview()
         }
+    }
+    
+    func addSubview(_ view: UIView, at index: Int) {
+        if subviews.indices.contains(index) {
+            subviews[index].removeFromSuperview()
+        }
+        insertSubview(view, at: index)
     }
     
     private func gridDimensions() -> (columns: Int, rows: Int) {
@@ -61,21 +90,5 @@ class GridView: UIView {
         dimensions[columns.floor * rows.floor] = (columns: columns.floor, rows: rows.floor)
 
         return dimensions[dimensions.keys.filter{$0 >= subviews.count}.min()!]!
-    }
-}
-
-extension GridView {
-    private struct Ratios {
-        static let distanceBetweenCardsRatio: CGFloat = 0.05
-    }
-}
-
-extension Double {
-    var ceil: Int {
-        return Int(Darwin.ceil(self))
-    }
-    
-    var floor: Int {
-        return Int(Darwin.floor(self))
     }
 }

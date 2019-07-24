@@ -21,30 +21,12 @@ class CardView: UIView {
     
     var borderColor = UIColor.lightGray { didSet { setNeedsDisplay() } }
     var borderWidth: CGFloat = 1.0 { didSet { setNeedsDisplay() } }
-    var numberOfShapes: Int = 3 {
-        didSet {
-            setNeedsDisplay()
-            setNeedsLayout()
-        }
-    }
-    var shapeColor: UIColor = UIColor.purple {
-        didSet{
-            setNeedsDisplay()
-            setNeedsLayout()
-        }
-    }
-    var shading: ShapeView.Shading = .striped {
-        didSet{
-            setNeedsDisplay()
-            setNeedsLayout()
-        }
-    }
-    var shape: ShapeView.Shape = .squiggle {
-        didSet{
-            setNeedsDisplay()
-            setNeedsLayout()
-        }
-    }
+    var numberOfShapes: Int = 3 { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var shapeColor: UIColor = UIColor.purple { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var shading: ShapeView.Shading = .striped { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var shape: ShapeView.Shape = .squiggle { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var facedUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    var showShadow: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
     
     override var description: String {
         return "\(super.description) [\(numberOfShapes) \(shading) \(shapeColor) \(shape)]"
@@ -60,13 +42,41 @@ class CardView: UIView {
                      numberOfShapes: Int,
                      shapeColor: UIColor,
                      shape: ShapeView.Shape,
-                     shading: ShapeView.Shading) {
-        self.init()
+                     shading: ShapeView.Shading,
+                     facedUp: Bool,
+                     showShadow: Bool) {
+        self.init(
+            numberOfShapes: numberOfShapes,
+            shapeColor: shapeColor,
+            shape: shape,
+            shading: shading,
+            facedUp: facedUp,
+            showShadow: showShadow
+        )
         self.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    convenience init(numberOfShapes: Int,
+                     shapeColor: UIColor,
+                     shape: ShapeView.Shape,
+                     shading: ShapeView.Shading,
+                     facedUp: Bool,
+                     showShadow: Bool) {
+        self.init(
+            facedUp: facedUp,
+            showShadow: showShadow
+        )
         self.numberOfShapes = numberOfShapes
         self.shapeColor = shapeColor
         self.shape = shape
         self.shading = shading
+    }
+    
+    convenience init(facedUp: Bool,
+                     showShadow: Bool) {
+        self.init()
+        self.facedUp = facedUp
+        self.showShadow = showShadow
         self.isOpaque = false
     }
     
@@ -94,23 +104,27 @@ class CardView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        for (index, shapeView) in shapeViews.enumerated() {
-            let distanceBetweenShapes = (CGFloat(index) * shapeHeight) + (CGFloat(index) * shapeMarginHeight)
-            shapeView.frame = CGRect(
-                x: bounds.origin.x + ((bounds.width - shapeWidth) / 2),
-                y: bounds.origin.y + (bounds.height - totalShapesHeight) / CGFloat(2) + distanceBetweenShapes,
-                width: shapeWidth,
-                height: shapeHeight
-            )
+        if facedUp {
+            for (index, shapeView) in shapeViews.enumerated() {
+                let distanceBetweenShapes = (CGFloat(index) * shapeHeight) + (CGFloat(index) * shapeMarginHeight)
+                shapeView.frame = CGRect(
+                    x: bounds.origin.x + ((bounds.width - shapeWidth) / 2),
+                    y: bounds.origin.y + (bounds.height - totalShapesHeight) / CGFloat(2) + distanceBetweenShapes,
+                    width: shapeWidth,
+                    height: shapeHeight
+                )
+            }
         }
-        drawCardShadow()
+        if showShadow {
+            drawCardShadow()
+        }
     }
     
     override func draw(_ rect: CGRect) {
-        drawCardBack()
+        drawCardBackground()
     }
     
-    private func drawCardBack() {
+    private func drawCardBackground() {
         let cardBack = UIBezierPath(roundedRect: bounds, cornerRadius: cardCornerRadius)
         cardBack.addClip()
         cardBack.lineWidth = borderWidth

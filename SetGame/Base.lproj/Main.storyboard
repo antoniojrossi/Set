@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Set Game View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="SetGameViewController" customModule="SetGame" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHD-0v-oHX">
+                                <rect key="frame" x="556.5" y="25" width="33.5" height="90"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="50"/>
+                                <color key="textColor" red="1" green="0.57637232540000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y3K-Jj-am2" customClass="GridView" customModule="SetGame" customModuleProvider="target">
+                                <rect key="frame" x="10" y="118" width="580" height="472"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="1tf-vj-lHv" userLabel="Card Decks">
+                                <rect key="frame" x="246" y="30" width="108" height="80"/>
+                                <subviews>
+                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o77-qh-ztz" userLabel="Deck" customClass="DeckView" customModule="SetGame">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="80"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="Ulf-1p-bS2"/>
+                                            <constraint firstAttribute="width" secondItem="o77-qh-ztz" secondAttribute="height" multiplier="5:8" id="lBa-xe-paR"/>
+                                        </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="hJd-Iv-CIu" appends="YES" id="sbm-aW-Twb"/>
+                                        </connections>
+                                    </view>
+                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n8E-hu-GWq" userLabel="Discard deck" customClass="DeckView" customModule="SetGame">
+                                        <rect key="frame" x="58" y="0.0" width="50" height="80"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="kfG-uH-64m" appends="YES" id="eeb-8v-HuF"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="n8E-hu-GWq" firstAttribute="width" secondItem="o77-qh-ztz" secondAttribute="height" multiplier="5:8" id="2sG-wk-RGy"/>
+                                    <constraint firstItem="n8E-hu-GWq" firstAttribute="width" secondItem="n8E-hu-GWq" secondAttribute="height" multiplier="5:8" id="A8i-lu-iCO"/>
+                                    <constraint firstItem="n8E-hu-GWq" firstAttribute="width" secondItem="o77-qh-ztz" secondAttribute="width" id="i9K-lE-Zz4"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="1tf-vj-lHv" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="1g8-fo-TaB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dHD-0v-oHX" secondAttribute="trailing" constant="10" id="5R2-2C-uet"/>
+                            <constraint firstItem="y3K-Jj-am2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="8eX-pc-M38"/>
+                            <constraint firstItem="1tf-vj-lHv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="8qB-k2-Eoo"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="y3K-Jj-am2" secondAttribute="trailing" constant="10" id="KK0-Ww-2zS"/>
+                            <constraint firstItem="y3K-Jj-am2" firstAttribute="top" secondItem="1tf-vj-lHv" secondAttribute="bottom" constant="8" symbolic="YES" id="NOb-Hf-048"/>
+                            <constraint firstItem="dHD-0v-oHX" firstAttribute="centerY" secondItem="1tf-vj-lHv" secondAttribute="centerY" id="Nag-Ld-EdG"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="y3K-Jj-am2" secondAttribute="bottom" constant="10" id="eqF-2V-gAt"/>
+                            <constraint firstItem="dHD-0v-oHX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="5" id="vKj-Ah-Pwe"/>
+                            <constraint firstItem="dHD-0v-oHX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1tf-vj-lHv" secondAttribute="trailing" constant="8" symbolic="YES" id="xNc-ef-hcw"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="deckView" destination="o77-qh-ztz" id="iHm-nf-XUg"/>
+                        <outlet property="playingCardsView" destination="y3K-Jj-am2" id="eH0-M0-fib"/>
+                        <outlet property="scoreLabel" destination="dHD-0v-oHX" id="4ZQ-CZ-CoP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="hJd-Iv-CIu">
+                    <connections>
+                        <action selector="drawCards:" destination="BYZ-38-t0r" id="08U-3Q-QBH"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="kfG-uH-64m">
+                    <connections>
+                        <action selector="newGame:" destination="BYZ-38-t0r" id="pNr-aH-7yq"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="47.826086956521742" y="20.758928571428569"/>
+        </scene>
+    </scenes>
+</document>

@@ -19,6 +19,7 @@ struct SetGame {
     private(set) var faceUpCards: [Card]
     private(set) var selectedCards: Set<Card>
     private(set) var score = 0
+    var numberOfCardsInDeck: Int { return deck.count }
     var isThereAMatch: Bool {
         get {
             guard selectedCards.count >= maxNumberOfSelectedCards else {
@@ -76,16 +77,18 @@ struct SetGame {
         return selectedCards.contains(card)
     }
     
-    mutating func selectCard(_ selectedCard: Card) {
-        guard faceUpCards.contains(selectedCard) else {
+    mutating func selectCard(at index: Int) {
+        guard faceUpCards.indices.contains(index) else {
             return
         }
-
+        
+        let selectedCard = faceUpCards[index]
         if selectedCards.contains(selectedCard), selectedCards.count < maxNumberOfSelectedCards {
             score = max(0, score + penalizationPerDeselection)
             selectedCards.remove(selectedCard)
         } else {
-            if selectedCards.count >= maxNumberOfSelectedCards, !selectedCards.contains(selectedCard) {
+            selectedCards.insert(selectedCard)
+            if selectedCards.count >= maxNumberOfSelectedCards {
                 if isThereAMatch {
                     score += pointsPerMatch
                     replaceSelectedCardsWithNewOnes()
@@ -94,7 +97,6 @@ struct SetGame {
                 }
                 selectedCards.removeAll()
             }
-            selectedCards.insert(selectedCard)
         }
     }
     
@@ -115,7 +117,8 @@ struct SetGame {
         for selectedCard in selectedCards {
             if let index = faceUpCards.firstIndex(of: selectedCard) {
                 if !deck.isEmpty {
-                    faceUpCards.replace(at: index, with: deck.removeFirst())
+                    let a = deck.removeFirst()
+                    faceUpCards.replace(at: index, with: a)
                 } else {
                     faceUpCards.remove(at: index)
                 }

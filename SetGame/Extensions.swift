@@ -29,3 +29,19 @@ extension CGPoint {
         return CGPoint(x: (x + destination.x) / 2, y: (y + destination.y) / 2)
     }
 }
+
+extension CGFloat {
+    static func arc4random(min: CGFloat, max: CGFloat) -> CGFloat {
+        return (CGFloat(Darwin.arc4random()) / CGFloat(UINT32_MAX)) * (max - min) + min
+    }
+}
+
+extension Double {
+    var ceil: Int {
+        return Int(Darwin.ceil(self))
+    }
+    
+    var floor: Int {
+        return Int(Darwin.floor(self))
+    }
+}
