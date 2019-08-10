@@ -19,6 +19,7 @@ struct SetGame {
     private(set) var faceUpCards: [Card]
     private(set) var selectedCards: Set<Card>
     private(set) var score = 0
+    private var observers = [SetGameObserver]()
     var numberOfCardsInDeck: Int { return deck.count }
     var isThereAMatch: Bool {
         get {
@@ -30,6 +31,7 @@ struct SetGame {
             let matchByShape = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.shape.rawValue})
             let matchByShading = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.shading.rawValue})
             let matchByColor = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.color.rawValue})
+            return true
             return [matchByNumberOfShapes, matchByShape, matchByShading, matchByColor].reduce(true){$0 && $1}
         }
     }
@@ -113,6 +115,10 @@ struct SetGame {
         }
     }
     
+    mutating func addObserver(_ observer: SetGameObserver) {
+        self.observers.append(observer)
+    }
+    
     private mutating func replaceSelectedCardsWithNewOnes() {
         for selectedCard in selectedCards {
             if let index = faceUpCards.firstIndex(of: selectedCard) {
@@ -120,7 +126,8 @@ struct SetGame {
                     let a = deck.removeFirst()
                     faceUpCards.replace(at: index, with: a)
                 } else {
-                    faceUpCards.remove(at: index)
+                    let removedCard = faceUpCards.remove(at: index)
+                    observers.forEach{$0.thrownAwayCard(removedCard)}
                 }
             }
         }

@@ -64,6 +64,10 @@ class GridView: UIView {
         return subviews.firstIndex(of: view)
     }
     
+    func removeSubview(_ view: UIView) {
+        view.removeFromSuperview()
+    }
+    
     func removeSubviews() {
         for view in subviews {
             view.removeFromSuperview()

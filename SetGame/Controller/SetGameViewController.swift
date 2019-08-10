@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SetGameViewController: UIViewController {
+class SetGameViewController: UIViewController, SetGameObserver {
     private let cardSymbolGreen = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
     private let cardSymbolPurple = #colorLiteral(red: 0.8446564078, green: 0.5145705342, blue: 1, alpha: 1)
     private let cardSymbolRed = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
@@ -17,7 +17,7 @@ class SetGameViewController: UIViewController {
     private let matchedCardButtonBorderColor = UIColor.green.cgColor
     private let mismatchedCardButtonBorderColor = UIColor.red.cgColor
     private let defaultCardBorderWidth: CGFloat = 1.0
-    private(set) var game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3)
+    private(set) var game = SetGame(initialNumberOfFaceUpCards: 81, drawCardsBy: 3)
     private var cardForCarView: [CardView: Card] = [CardView: Card]()
     
     @IBOutlet weak var playingCardsView: GridView!
@@ -36,12 +36,14 @@ class SetGameViewController: UIViewController {
     }
     
     @IBAction func newGame(_ sender: UITapGestureRecognizer) {
-        game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3)
+        game = SetGame(initialNumberOfFaceUpCards: 81, drawCardsBy: 3)
+        game.addObserver(self)
         configureViews()
     }
     
     override func viewDidLoad() {
         playingCardsView.gridViewAspectRatio = (height: 8, width: 5)
+        game.addObserver(self)
         configureViews()
     }
     
@@ -73,7 +75,11 @@ class SetGameViewController: UIViewController {
                         cardView.borderWidth = defaultCardBorderWidth
                     }
                 } else {
-                    createCardView(for: card, andAddToPlayingCardsViewAt: index)
+                    if game.canDealMoreCards {
+                        createCardView(for: card, andAddToPlayingCardsViewAt: index)
+                    } else {
+                        playingCardsView.removeSubview(cardView)
+                    }
                 }
             } else {
                 createCardView(for: card, andAddToPlayingCardsViewAt: index)
@@ -88,6 +94,10 @@ class SetGameViewController: UIViewController {
         }
     }
     
+    func thrownAwayCard(_ card: Card) {
+        print("Card thrown away \(card)")
+    }
+    
     private func createCardView(for card: Card, andAddToPlayingCardsViewAt index: Int) {
         let cardView = CardView(
             tapGestureRecognizer: UITapGestureRecognizer(target: self, action: #selector(selectCard(recognizer:))),
@@ -96,7 +106,7 @@ class SetGameViewController: UIViewController {
             shape: viewShape(for: card.shape),
             shading: viewShading(for: card.shading),
             facedUp: true,
-            showShadow: true
+            showShadow: false
         )
         cardForCarView[cardView] = card
         playingCardsView.addSubview(cardView, at: index)
