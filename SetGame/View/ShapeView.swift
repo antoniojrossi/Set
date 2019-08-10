@@ -10,25 +10,11 @@ import UIKit
 
 @IBDesignable
 class ShapeView: UIView {
-    
-    enum Shading {
-        case solid
-        case striped
-        case open
-    }
-    
-    enum Shape {
-        case diamond
-        case squiggle
-        case stadium
-    }
-    
-    // TODO: Seguramente haya que calcular este valor con proporción al tamaño de la carta
     lazy var lineWidth: CGFloat = bounds.width * Ratios.lineWidthRatio
     lazy var stripeWidth: CGFloat = bounds.width * Ratios.stripeWidth
     
     var color: UIColor = UIColor.black
-    var shading: Shading = .open
+    var shading: SetGameCard.Shading = .open
     
     func applyShading(to path: UIBezierPath) {
         switch shading {

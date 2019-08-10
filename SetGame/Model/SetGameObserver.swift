@@ -10,4 +10,5 @@ import Foundation
 
 protocol SetGameObserver {
     func thrownAwayCard(_ card: Card)
+    func mismatch(_ cards: Set<Card>)
 }

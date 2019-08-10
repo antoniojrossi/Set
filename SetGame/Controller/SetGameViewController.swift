@@ -9,16 +9,13 @@
 import UIKit
 
 class SetGameViewController: UIViewController, SetGameObserver {
-    private let cardSymbolGreen = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
-    private let cardSymbolPurple = #colorLiteral(red: 0.8446564078, green: 0.5145705342, blue: 1, alpha: 1)
-    private let cardSymbolRed = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
     private let selectedCardButtonBorderWidth = CGFloat(5.0)
     private let selectedCardButtonBorderColor = UIColor.blue.cgColor
     private let matchedCardButtonBorderColor = UIColor.green.cgColor
     private let mismatchedCardButtonBorderColor = UIColor.red.cgColor
     private let defaultCardBorderWidth: CGFloat = 1.0
-    private(set) var game = SetGame(initialNumberOfFaceUpCards: 81, drawCardsBy: 3)
-    private var cardForCarView: [CardView: Card] = [CardView: Card]()
+    private let defaultCardBorderColor = UIColor.lightGray
+    private(set) var game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3)
     
     @IBOutlet weak var playingCardsView: GridView!
     @IBOutlet private weak var scoreLabel: UILabel!
@@ -36,7 +33,7 @@ class SetGameViewController: UIViewController, SetGameObserver {
     }
     
     @IBAction func newGame(_ sender: UITapGestureRecognizer) {
-        game = SetGame(initialNumberOfFaceUpCards: 81, drawCardsBy: 3)
+        game = SetGame(initialNumberOfFaceUpCards: 12, drawCardsBy: 3)
         game.addObserver(self)
         configureViews()
     }
@@ -49,41 +46,42 @@ class SetGameViewController: UIViewController, SetGameObserver {
     
     private func configureViews() {
         playingCardsView.removeSubviews()
-        cardForCarView.removeAll()
         deckView.cardsFaceUp = false
         deckView.viewGenerator = { CardView(facedUp: false, showShadow: false) }
         updateViewFromModel()
     }
     
     private func updateViewFromModel() {
+        updateScoreView()
+        updateDeckView()
+        updateFaceUpCardViews()
+    }
+    
+    private func updateScoreView() {
         scoreLabel.text = "\(game.score)"
+    }
+    
+    private func updateDeckView() {
         deckView.numberOfCards = game.numberOfCardsInDeck
+    }
+    
+    private func updateFaceUpCardViews() {
         for (index, card) in game.faceUpCards.enumerated() {
-            if let cardView = playingCardsView.view(at: index) as? CardView {
-                if cardForCarView[cardView] == card {
-                    if game.isCardSelected(card) {
-                        cardView.borderColor = UIColor(cgColor: selectedCardButtonBorderColor)
-                        cardView.borderWidth = selectedCardButtonBorderWidth
-                        if game.isThereAMatch {
-                            cardView.borderColor = UIColor(cgColor: matchedCardButtonBorderColor)
-                        } else if game.isThereAMismatch {
-                            cardView.borderColor = UIColor(cgColor: mismatchedCardButtonBorderColor)
-                        } else {
-                            cardView.borderColor = UIColor(cgColor: selectedCardButtonBorderColor)
-                        }
-                    } else {
-                        cardView.borderWidth = defaultCardBorderWidth
-                    }
-                } else {
-                    if game.canDealMoreCards {
-                        createCardView(for: card, andAddToPlayingCardsViewAt: index)
-                    } else {
-                        playingCardsView.removeSubview(cardView)
-                    }
-                }
+            if let cardView = playingCardsView.view(at: index) as? CardView, card.representsTheSameCardAs(cardView) {
+                updateSelectedCardsView(card, withView: cardView)
             } else {
                 createCardView(for: card, andAddToPlayingCardsViewAt: index)
             }
+        }
+    }
+    
+    private func updateSelectedCardsView(_ card: Card, withView cardView: CardView) {
+        if game.isCardSelected(card) {
+            cardView.borderColor = UIColor(cgColor: selectedCardButtonBorderColor)
+            cardView.borderWidth = selectedCardButtonBorderWidth
+        } else {
+            cardView.borderWidth = defaultCardBorderWidth
+            cardView.borderColor = defaultCardBorderColor
         }
     }
     
@@ -95,44 +93,30 @@ class SetGameViewController: UIViewController, SetGameObserver {
     }
     
     func thrownAwayCard(_ card: Card) {
-        print("Card thrown away \(card)")
+        if let cardView = playingCardsView.subviews.first(where: {($0 as! CardView).representsTheSameCardAs(card)}) {
+            playingCardsView.removeSubview(cardView)
+        }
+    }
+    
+    func mismatch(_ cards: Set<Card>) {
+        for card in cards {
+            if let cardView = playingCardsView.subviews.first(where: {($0 as! CardView).representsTheSameCardAs(card)}) as? CardView {
+                cardView.borderColor = UIColor(cgColor: mismatchedCardButtonBorderColor)
+                cardView.borderWidth = selectedCardButtonBorderWidth
+            }
+        }
     }
     
     private func createCardView(for card: Card, andAddToPlayingCardsViewAt index: Int) {
         let cardView = CardView(
             tapGestureRecognizer: UITapGestureRecognizer(target: self, action: #selector(selectCard(recognizer:))),
-            numberOfShapes: card.numberOfShapes.rawValue,
-            shapeColor: uiColorFor(card.color),
-            shape: viewShape(for: card.shape),
-            shading: viewShading(for: card.shading),
+            numberOfShapes: card.numberOfShapes,
+            shapeColor: card.color,
+            shape: card.shape,
+            shading: card.shading,
             facedUp: true,
             showShadow: false
         )
-        cardForCarView[cardView] = card
         playingCardsView.addSubview(cardView, at: index)
-    }
-    
-    private func uiColorFor(_ color: Card.Color) -> UIColor {
-        switch color {
-        case .green: return cardSymbolGreen
-        case .purple: return cardSymbolPurple
-        case .red: return cardSymbolRed
-        }
-    }
-    
-    private func viewShape(for cardShape: Card.Shape) -> ShapeView.Shape {
-        switch cardShape {
-        case .diamond: return ShapeView.Shape.diamond
-        case .squiggle: return ShapeView.Shape.squiggle
-        case .stadium: return ShapeView.Shape.stadium
-        }
-    }
-    
-    private func viewShading(for cardShading: Card.Shading) -> ShapeView.Shading {
-        switch cardShading {
-        case .open: return ShapeView.Shading.open
-        case .solid: return ShapeView.Shading.solid
-        case .striped: return ShapeView.Shading.striped
-        }
     }
 }

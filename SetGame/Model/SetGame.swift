@@ -31,7 +31,6 @@ struct SetGame {
             let matchByShape = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.shape.rawValue})
             let matchByShading = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.shading.rawValue})
             let matchByColor = isAMatchOf(cards[0], cards[1], cards[2], by: {$0.color.rawValue})
-            return true
             return [matchByNumberOfShapes, matchByShape, matchByShading, matchByColor].reduce(true){$0 && $1}
         }
     }
@@ -56,10 +55,10 @@ struct SetGame {
         deck = Array<Card>()
         faceUpCards = Array<Card>()
         selectedCards = Set<Card>()
-        let numberOfShapes: [Card.NumberOfShapes] = [.one, .two, .three]
-        let shapes: [Card.Shape] = [.diamond, .squiggle, .stadium]
-        let shadings: [Card.Shading] = [.solid, .striped, .open]
-        let colors: [Card.Color] = [.red, .green, .purple]
+        let numberOfShapes: [SetGameCard.NumberOfShapes] = [.one, .two, .three]
+        let shapes: [SetGameCard.Shape] = [.diamond, .squiggle, .stadium]
+        let shadings: [SetGameCard.Shading] = [.solid, .striped, .open]
+        let colors: [SetGameCard.Color] = [.red, .green, .purple]
         // TODO: Refactor. extension of sequence??
         for numberOfShape in numberOfShapes {
             for shape in shapes {
@@ -95,6 +94,7 @@ struct SetGame {
                     score += pointsPerMatch
                     replaceSelectedCardsWithNewOnes()
                 } else {
+                    observers.forEach{$0.mismatch(selectedCards)}
                     score = max(0, score + penalizationPerMismatch)
                 }
                 selectedCards.removeAll()
